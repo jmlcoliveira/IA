@@ -31,11 +31,17 @@ public class Main {
 
     private static ArrayList<String> readCities(Scanner in){
         ArrayList<String> temp = new ArrayList<>();
-        String city = "";
-        //in.useDelimiter(System.getProperty("line.separator"));
-        while(in.hasNext())
-            temp.add(in.next().trim());
-        in.nextLine();
+        String cities = in.nextLine();
+        StringBuilder city= new StringBuilder();
+        for(int i = 0; i<cities.length(); i++){
+            if(cities.charAt(i) != ' ')
+                city.append(cities.charAt(i));
+            else{
+                temp.add(city.toString());
+                city = new StringBuilder();
+            }
+        }
+        temp.add(city.toString());
         return temp;
     }
 }
