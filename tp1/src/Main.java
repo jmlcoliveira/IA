@@ -9,12 +9,13 @@ public class Main {
         Node n;
         ArrayList<String> prov = new ArrayList<>();
         prov.add("Dobrogea");
-        prov.add("Banat");
-        //for(Algorithms a: Algorithms.values()){
+        //prov.add("Transilvania");
+        //prov.add("Banat");
+        for(Algorithms a: Algorithms.values()){
             graph.reset();
-            n = graph.searchSolution("Arad", "Bucharest", prov,Algorithms.AStarSearch);
-            //System.out.println(a.name());
+            n = graph.searchSolution("Arad", "Giurgiu",prov, a);
+            System.out.println(a.name());
             graph.showSolution(n);
-        //}
+        }
     }
 }
