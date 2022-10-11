@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class SimAnnealing {
 
-    private DistanceMatrix d;
+    private final DistanceMatrix d;
     private final double alpha = 0.99;
 
     public SimAnnealing(DistanceMatrix d){
@@ -35,8 +35,8 @@ public class SimAnnealing {
         Solution best = current;
         double temperature = iniTemp;
         while(true){
-            int i = (int)(Math.random() * (cities.size()-1));
-            int j = (int)(Math.random() * (cities.size()-1));
+            int i = (int)Math.floor(Math.random() * (cities.size()-1));
+            int j = (int)Math.ceil(Math.random() * (cities.size()-1));
             String temp = cities.get(i);
             cities.set(i, cities.get(j));
             cities.set(j, temp);
@@ -48,7 +48,7 @@ public class SimAnnealing {
             }
             else{
                 int distance = next.getSolutionDistance();
-                if(Math.exp(-distance/temperature) < Math.random())
+                if(Math.exp(-distance/temperature) > Math.random())
                     current = next;
             }
             if(toStop(temperature)) return best;
