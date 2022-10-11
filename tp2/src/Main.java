@@ -26,12 +26,15 @@ public class Main {
         }
 
         ArrayList<String> cities = readCities(in);
-        System.out.println(cities);
+        SimAnnealing sim = new SimAnnealing(d);
+        Solution s = sim.solution(cities, 1000000000);
+        s.printSolution();
     }
 
     private static ArrayList<String> readCities(Scanner in){
         ArrayList<String> temp = new ArrayList<>();
         String cities = in.nextLine();
+        cities = cities.replaceAll("[,.;-]", "");
         StringBuilder city= new StringBuilder();
         for(int i = 0; i<cities.length(); i++){
             if(cities.charAt(i) != ' ')

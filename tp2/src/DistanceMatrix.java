@@ -72,6 +72,7 @@ public class DistanceMatrix {
     public Integer distance(String city1, String city2) {
         int indexC1 = cities.indexOf(city1);
         int indexC2 = cities.indexOf(city2);
+        if(indexC1 == indexC2) return 0;
         if (indexC1<indexC2)
             return distances.get(indexC2-1).get(indexC1);
         else
