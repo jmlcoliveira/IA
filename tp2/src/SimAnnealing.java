@@ -19,6 +19,12 @@ public class SimAnnealing {
     }
 
     private Solution computeSolution(ArrayList<String> cities){
+        int[] rand = generateNonContiguous(1, cities.size()-1);
+        int i1 = rand[0];
+        int i2 = rand[1];
+        String temp = cities.get(i1);
+        cities.set(i1, cities.get(i2));
+        cities.set(i2, temp);
         int solutionDistance = 0;
         ArrayList<String> solutionPath = new ArrayList<>();
         for(int i=0; i<cities.size()-1; i++) {
@@ -38,12 +44,6 @@ public class SimAnnealing {
         double temperature = iniTemp;
         while(true){
             ArrayList<String> curr = (ArrayList<String>) current.getSolutionPath().clone();
-            int[] rand = generateNonContiguous(curr.size());
-            int i = rand[0];
-            int j = rand[1];
-            String temp = curr.get(i);
-            curr.set(i, curr.get(j));
-            curr.set(j, temp);
             Solution next = computeSolution(curr);
             if(next.getSolutionDistance() < current.getSolutionDistance()){
                 current = next;
@@ -60,12 +60,14 @@ public class SimAnnealing {
         }
     }
 
-    private int[] generateNonContiguous(int size){
+    private int[] generateNonContiguous(int minInc, int maxInc){
         int[] res = new int[2];
-        res[0] = (int)(Math.random() * (size-1));
-        res[1] = (int)Math.ceil(Math.random() * (size-1));
-        while(Math.abs(res[0] - res[1]) <= 1)
-            res[1] = (int)Math.ceil(Math.random() * (size-1));
+        res[0] = (int)(Math.random() * (maxInc)) + minInc;
+        res[1] = (int)(Math.random() * (maxInc)) + minInc;
+        while(Math.abs(res[0] - res[1]) <= 1){
+            res[0] = (int)(Math.random() * (maxInc)) + minInc;
+            res[1] = (int)(Math.random() * (maxInc)) + minInc;
+        }
         return res;
     }
 }

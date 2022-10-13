@@ -25,9 +25,16 @@ public class Main {
         }
 
         ArrayList<String> cities = readCities(in);
+
         SimAnnealing sim = new SimAnnealing(d);
-        Solution s = sim.solution(cities, 1000000000);
-        System.out.println(s);
+        int best = Integer.MAX_VALUE;
+        while(true) {
+            Solution s = sim.solution(cities, 1000000000);
+            if(s.getSolutionDistance() < best){
+                System.out.println(s);
+                best = s.getSolutionDistance();
+            }
+        }
     }
 
     private static ArrayList<String> readCities(Scanner in){
