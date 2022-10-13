@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
@@ -28,7 +27,7 @@ public class Main {
         ArrayList<String> cities = readCities(in);
         SimAnnealing sim = new SimAnnealing(d);
         Solution s = sim.solution(cities, 1000000000);
-        s.printSolution();
+        System.out.println(s);
     }
 
     private static ArrayList<String> readCities(Scanner in){

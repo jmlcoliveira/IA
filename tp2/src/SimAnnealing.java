@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class SimAnnealing {
 
     private final DistanceMatrix d;
-    private final double alpha = 0.99;
+    private final double alpha = 0.999;
 
     public SimAnnealing(DistanceMatrix d){
         this.d = d;
@@ -30,17 +30,21 @@ public class SimAnnealing {
         return new Solution(solutionPath, solutionDistance);
     }
 
+    @SuppressWarnings("unchecked")
     public Solution solution(ArrayList<String> cities, double iniTemp){
         Solution current = computeSolution(cities);
+        if(cities.size() <= 2) return current;
         Solution best = current;
         double temperature = iniTemp;
         while(true){
-            int i = (int)Math.floor(Math.random() * (cities.size()-1));
-            int j = (int)Math.ceil(Math.random() * (cities.size()-1));
-            String temp = cities.get(i);
-            cities.set(i, cities.get(j));
-            cities.set(j, temp);
-            Solution next = computeSolution(cities);
+            ArrayList<String> curr = (ArrayList<String>) current.getSolutionPath().clone();
+            int[] rand = generateNonContiguous(curr.size());
+            int i = rand[0];
+            int j = rand[1];
+            String temp = curr.get(i);
+            curr.set(i, curr.get(j));
+            curr.set(j, temp);
+            Solution next = computeSolution(curr);
             if(next.getSolutionDistance() < current.getSolutionDistance()){
                 current = next;
                 if(current.getSolutionDistance() < best.getSolutionDistance())
@@ -54,6 +58,15 @@ public class SimAnnealing {
             if(toStop(temperature)) return best;
             temperature = newTemp(temperature);
         }
+    }
+
+    private int[] generateNonContiguous(int size){
+        int[] res = new int[2];
+        res[0] = (int)(Math.random() * (size-1));
+        res[1] = (int)Math.ceil(Math.random() * (size-1));
+        while(Math.abs(res[0] - res[1]) <= 1)
+            res[1] = (int)Math.ceil(Math.random() * (size-1));
+        return res;
     }
 }
 
@@ -82,7 +95,8 @@ class Solution{
         this.solutionPath = solutionPath;
     }
 
-    public void printSolution(){
-        System.out.println(solutionPath + " with a distance of: " + solutionDistance);
+    @Override
+    public String toString() {
+        return solutionPath + " with a distance of: " + solutionDistance;
     }
 }
