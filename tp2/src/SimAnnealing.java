@@ -5,6 +5,8 @@ public class SimAnnealing {
     private final DistanceMatrix d;
     private final double alpha = 0.999;
 
+    private final double beta = 1.001;
+
     public SimAnnealing(DistanceMatrix d){
         this.d = d;
     }
@@ -36,27 +38,34 @@ public class SimAnnealing {
         return new Solution(solutionPath, solutionDistance);
     }
 
+    private double var_n_iter(int num_iter){
+        return num_iter * beta;
+    }
+
     @SuppressWarnings("unchecked")
-    public Solution solution(ArrayList<String> cities, double iniTemp){
+    public Solution solution(ArrayList<String> cities, double iniTemp, int num_iter){
         Solution current = computeSolution(cities);
         if(cities.size() <= 2) return current;
         Solution best = current;
         double temperature = iniTemp;
         while(true){
-            ArrayList<String> curr = (ArrayList<String>) current.getSolutionPath().clone();
-            Solution next = computeSolution(curr);
-            if(next.getSolutionDistance() < current.getSolutionDistance()){
-                current = next;
-                if(current.getSolutionDistance() < best.getSolutionDistance())
-                    best = current;
-            }
-            else{
-                int distance = next.getSolutionDistance();
-                if(Math.exp(-distance/temperature) > Math.random())
+            for(int i = 0; i < num_iter; i++){
+                ArrayList<String> curr = (ArrayList<String>) current.getSolutionPath().clone();
+                Solution next = computeSolution(curr);
+                if(next.getSolutionDistance() < current.getSolutionDistance()){
                     current = next;
+                    if(current.getSolutionDistance() < best.getSolutionDistance())
+                        best = current;
+                }
+                else{
+                    int distance = next.getSolutionDistance();
+                    if(Math.exp(-distance/temperature) > Math.random())
+                        current = next;
+                }
             }
             if(toStop(temperature)) return best;
             temperature = newTemp(temperature);
+            num_iter = (int)var_n_iter(num_iter);
         }
     }
 
