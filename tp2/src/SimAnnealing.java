@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class SimAnnealing {
 
@@ -20,7 +21,7 @@ public class SimAnnealing {
         return currTemp < 0.000000000001;
     }
 
-    private Solution computeSolution(ArrayList<String> cities){
+    private Solution computeSolution(int curr_iter, double curr_temp, ArrayList<String> cities){
         int[] rand = generateNonContiguous(1, cities.size()-1);
         int i1 = rand[0];
         int i2 = rand[1];
@@ -35,7 +36,7 @@ public class SimAnnealing {
         }
         solutionPath.add(cities.get(cities.size()-1));
         solutionDistance += d.distance(cities.get(cities.size()-1), cities.get(0));
-        return new Solution(solutionPath, solutionDistance);
+        return new Solution(solutionPath, solutionDistance, curr_iter, curr_temp);
     }
 
     private double var_n_iter(int num_iter){
@@ -44,14 +45,17 @@ public class SimAnnealing {
 
     @SuppressWarnings("unchecked")
     public Solution solution(ArrayList<String> cities, double iniTemp, int num_iter){
-        Solution current = computeSolution(cities);
-        if(cities.size() <= 2) return current;
+        int count = 0;
+        Solution current = computeSolution(count, iniTemp, cities);
+        if(cities.size() <= 3) return current;
         Solution best = current;
         double temperature = iniTemp;
         while(true){
             for(int i = 0; i < num_iter; i++){
+                count++;
                 ArrayList<String> curr = (ArrayList<String>) current.getSolutionPath().clone();
-                Solution next = computeSolution(curr);
+                curr.remove(curr.size()-1);
+                Solution next = computeSolution(count, temperature, curr);
                 if(next.getSolutionDistance() < current.getSolutionDistance()){
                     current = next;
                     if(current.getSolutionDistance() < best.getSolutionDistance())
@@ -73,21 +77,24 @@ public class SimAnnealing {
         int[] res = new int[2];
         res[0] = (int)(Math.random() * (maxInc)) + minInc;
         res[1] = (int)(Math.random() * (maxInc)) + minInc;
-        while(Math.abs(res[0] - res[1]) <= 1){
-            res[0] = (int)(Math.random() * (maxInc)) + minInc;
-            res[1] = (int)(Math.random() * (maxInc)) + minInc;
-        }
+        if(Math.abs(res[0] - res[1]) <= 1)
+            return generateNonContiguous(minInc, maxInc);
         return res;
     }
 }
 
 class Solution{
-    private ArrayList<String> solutionPath;
-    private int solutionDistance;
+    private final ArrayList<String> solutionPath;
+    private final int solutionDistance;
+    private final int curr_iter;
+    private final double curr_temp;
 
-    public Solution(ArrayList<String> solutionPath, int solutionDistance){
-        this.solutionPath = solutionPath;
+    public Solution(ArrayList<String> solutionPath, int solutionDistance, int curr_iter, double curr_temp){
+        this.solutionPath = new ArrayList<>(solutionPath);
+        this.solutionPath.add(this.solutionPath.get(0));
         this.solutionDistance = solutionDistance;
+        this.curr_iter = curr_iter;
+        this.curr_temp = curr_temp;
     }
 
     public int getSolutionDistance() {
@@ -98,16 +105,8 @@ class Solution{
         return solutionPath;
     }
 
-    public void setSolutionDistance(int solutionDistance) {
-        this.solutionDistance = solutionDistance;
-    }
-
-    public void setSolutionPath(ArrayList<String> solutionPath) {
-        this.solutionPath = solutionPath;
-    }
-
     @Override
     public String toString() {
-        return solutionPath + " with a distance of: " + solutionDistance;
+        return "Nr. iter: " + curr_iter + "\nTemp: " + curr_temp + "\n" + solutionPath + " with a distance of: " + solutionDistance;
     }
 }

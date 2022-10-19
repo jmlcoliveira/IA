@@ -24,13 +24,13 @@ public class Main {
                 break;
         }
 
-        ArrayList<String> cities = readCities(in);
-        //ArrayList<String> cities = d.getCities();
+        //ArrayList<String> cities = readCities(in);
+        ArrayList<String> cities = d.getCities();
 
         SimAnnealing sim = new SimAnnealing(d);
         int best = Integer.MAX_VALUE;
         while(true) {
-            Solution s = sim.solution(cities, 1000, 10);
+            Solution s = sim.solution(cities, 10000, 10);
             if(s.getSolutionDistance() < best){
                 System.out.println(s);
                 best = s.getSolutionDistance();
