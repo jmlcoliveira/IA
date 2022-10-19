@@ -1,12 +1,11 @@
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class SimAnnealing {
 
     private final DistanceMatrix d;
-    private final double alpha = 0.85;
+    private final double ALPHA = 0.85;
 
-    private final double beta = 1.001;
+    private final double BETA = 1.005;
 
     public SimAnnealing(DistanceMatrix d){
         this.d = d;
@@ -14,7 +13,11 @@ public class SimAnnealing {
 
     //decaimento
     private double newTemp(double currTemp){
-        return alpha * currTemp;
+        return ALPHA * currTemp;
+    }
+
+    private double var_n_iter(double num_iter){
+        return BETA * num_iter;
     }
 
     private boolean toStop(double currTemp){
@@ -39,16 +42,12 @@ public class SimAnnealing {
         return new Solution(solutionPath, solutionDistance, curr_iter, curr_temp);
     }
 
-    private double var_n_iter(double num_iter){
-        return num_iter * beta;
-    }
-
     public Solution solution(ArrayList<String> cities, double iniTemp, double num_iter){
         int count = 0;
         Solution current = computeSolution(count, iniTemp, cities);
         if(cities.size() <= 3) return current;
         Solution best = current;
-        double temperature = iniTemp;
+        double temperature = current.getCurr_temp()*2;
         while(true){
             for(int i = 0; i < (int)num_iter; i++){
                 count++;
@@ -76,7 +75,7 @@ public class SimAnnealing {
         int[] res = new int[2];
         res[0] = (int)(Math.random() * (maxInc)) + minInc;
         res[1] = (int)(Math.random() * (maxInc)) + minInc;
-        if(Math.abs(res[0] - res[1]) <= 1)
+        if(Math.abs(res[0] - res[1]) == 0)
             return generateNonContiguous(minInc, maxInc);
         return res;
     }
@@ -102,6 +101,10 @@ class Solution{
 
     public ArrayList<String> getSolutionPath() {
         return solutionPath;
+    }
+
+    public double getCurr_temp() {
+        return curr_temp;
     }
 
     @Override
