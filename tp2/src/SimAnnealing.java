@@ -43,7 +43,6 @@ public class SimAnnealing {
         return num_iter * beta;
     }
 
-    @SuppressWarnings("unchecked")
     public Solution solution(ArrayList<String> cities, double iniTemp, double num_iter){
         int count = 0;
         Solution current = computeSolution(count, iniTemp, cities);
@@ -53,16 +52,16 @@ public class SimAnnealing {
         while(true){
             for(int i = 0; i < (int)num_iter; i++){
                 count++;
-                ArrayList<String> curr = (ArrayList<String>) current.getSolutionPath().clone();
+                ArrayList<String> curr = new ArrayList<>(current.getSolutionPath());
                 curr.remove(curr.size()-1);
                 Solution next = computeSolution(count, temperature, curr);
-                if(next.getSolutionDistance() < current.getSolutionDistance()){
+                int distance = next.getSolutionDistance() - current.getSolutionDistance();
+                if(distance < 0){
                     current = next;
                     if(current.getSolutionDistance() < best.getSolutionDistance())
                         best = current;
                 }
                 else{
-                    int distance = next.getSolutionDistance();
                     if(Math.exp(-distance/temperature) > Math.random())
                         current = next;
                 }
