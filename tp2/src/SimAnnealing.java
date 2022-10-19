@@ -4,7 +4,7 @@ import java.util.Arrays;
 public class SimAnnealing {
 
     private final DistanceMatrix d;
-    private final double alpha = 0.999;
+    private final double alpha = 0.85;
 
     private final double beta = 1.001;
 
@@ -18,7 +18,7 @@ public class SimAnnealing {
     }
 
     private boolean toStop(double currTemp){
-        return currTemp < 0.000000000001;
+        return currTemp < 0.0000000001;
     }
 
     private Solution computeSolution(int curr_iter, double curr_temp, ArrayList<String> cities){
@@ -39,19 +39,19 @@ public class SimAnnealing {
         return new Solution(solutionPath, solutionDistance, curr_iter, curr_temp);
     }
 
-    private double var_n_iter(int num_iter){
+    private double var_n_iter(double num_iter){
         return num_iter * beta;
     }
 
     @SuppressWarnings("unchecked")
-    public Solution solution(ArrayList<String> cities, double iniTemp, int num_iter){
+    public Solution solution(ArrayList<String> cities, double iniTemp, double num_iter){
         int count = 0;
         Solution current = computeSolution(count, iniTemp, cities);
         if(cities.size() <= 3) return current;
         Solution best = current;
         double temperature = iniTemp;
         while(true){
-            for(int i = 0; i < num_iter; i++){
+            for(int i = 0; i < (int)num_iter; i++){
                 count++;
                 ArrayList<String> curr = (ArrayList<String>) current.getSolutionPath().clone();
                 curr.remove(curr.size()-1);
@@ -69,7 +69,7 @@ public class SimAnnealing {
             }
             if(toStop(temperature)) return best;
             temperature = newTemp(temperature);
-            num_iter = (int)var_n_iter(num_iter);
+            num_iter = var_n_iter(num_iter);
         }
     }
 
