@@ -55,7 +55,6 @@ public class SimAnnealing {
 
     public Solution solution(ArrayList<String> cities, double iniTemp, double num_iter){
         int count = 0;
-        Collections.shuffle(cities);
         Solution current = computeSolution(count, iniTemp, cities);
         if(cities.size() <= 3) return current;
         Solution best = current;

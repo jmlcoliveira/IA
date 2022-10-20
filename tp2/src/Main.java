@@ -2,12 +2,11 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
 
-    private static final String FILE_NAME = "Distancias.txt";
+    private static final String FILE_NAME = "quiz.txt";
     private static final String READ_FROM_COMMAND_LINE = "C";
     private static final  String READ_FROM_FILE = "F";
 
@@ -25,17 +24,14 @@ public class Main {
                 break;
         }
 
-        //ArrayList<String> cities = readCities(in);
-        ArrayList<String> cities = d.getCities();
+        ArrayList<String> cities = readCities(in);
 
         SimAnnealing sim = new SimAnnealing(d);
         int best = Integer.MAX_VALUE;
-        while(true) {
-            Solution s = sim.solution(cities, 2000, cities.size());
-            if(s.getSolutionDistance() < best){
-                System.out.println(s);
-                best = s.getSolutionDistance();
-            }
+        Solution s = sim.solution(cities, 2000, cities.size());
+        if(s.getSolutionDistance() < best){
+            System.out.println(s);
+            best = s.getSolutionDistance();
         }
     }
 
@@ -45,14 +41,10 @@ public class Main {
         cities = cities.replaceAll("[,.;-]", "");
         StringBuilder city= new StringBuilder();
         for(int i = 0; i<cities.length(); i++){
-            if(cities.charAt(i) != ' ')
-                city.append(cities.charAt(i));
-            else{
-                temp.add(city.toString());
-                city = new StringBuilder();
-            }
+            city.append(cities.charAt(i));
+            temp.add(city.toString());
+            city = new StringBuilder();
         }
-        temp.add(city.toString());
         return temp;
     }
 }
