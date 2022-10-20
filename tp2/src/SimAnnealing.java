@@ -3,7 +3,7 @@ import java.util.*;
 public class SimAnnealing {
 
     private final DistanceMatrix d;
-    private final double ALPHA = 0.84;
+    private final double ALPHA = 0.99;
 
     private final double BETA = 1.0;
 
