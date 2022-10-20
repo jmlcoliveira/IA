@@ -1,11 +1,11 @@
-import java.util.ArrayList;
+import java.util.*;
 
 public class SimAnnealing {
 
     private final DistanceMatrix d;
-    private final double ALPHA = 0.85;
+    private final double ALPHA = 0.84;
 
-    private final double BETA = 1.005;
+    private final double BETA = 1.0;
 
     public SimAnnealing(DistanceMatrix d){
         this.d = d;
@@ -25,25 +25,37 @@ public class SimAnnealing {
     }
 
     private Solution computeSolution(int curr_iter, double curr_temp, ArrayList<String> cities){
-        int[] rand = generateNonContiguous(1, cities.size()-1);
-        int i1 = rand[0];
-        int i2 = rand[1];
-        String temp = cities.get(i1);
-        cities.set(i1, cities.get(i2));
-        cities.set(i2, temp);
+        int[] rand = generateNonContiguous(0, cities.size());
+        int i = rand[0];
+        int j = rand[1];
+        if(i>j){
+            int temp = i;
+            i = j;
+            j = temp;
+        }
+        //j is always bigger than i
+        List<String> ItoJ = cities.subList(i+1, j+1);
+        List<String> ZeroToI = cities.subList(0, i+1);
+        List<String> JPlusToEnd = cities.subList(j+1, cities.size());
+        Collections.reverse(ItoJ);
+        ArrayList<String> newOrder = new ArrayList<>(ZeroToI);
+        newOrder.addAll(ItoJ);
+        newOrder.addAll(JPlusToEnd);
+
         int solutionDistance = 0;
         ArrayList<String> solutionPath = new ArrayList<>();
-        for(int i=0; i<cities.size()-1; i++) {
-            solutionPath.add(cities.get(i));
-            solutionDistance += d.distance(cities.get(i), cities.get(i + 1));
+        for(i=0; i<newOrder.size()-1; i++) {
+            solutionPath.add(newOrder.get(i));
+            solutionDistance += d.distance(newOrder.get(i), newOrder.get(i + 1));
         }
-        solutionPath.add(cities.get(cities.size()-1));
-        solutionDistance += d.distance(cities.get(cities.size()-1), cities.get(0));
+        solutionPath.add(newOrder.get(newOrder.size()-1));
+        solutionDistance += d.distance(newOrder.get(newOrder.size()-1), newOrder.get(0));
         return new Solution(solutionPath, solutionDistance, curr_iter, curr_temp);
     }
 
     public Solution solution(ArrayList<String> cities, double iniTemp, double num_iter){
         int count = 0;
+        Collections.shuffle(cities);
         Solution current = computeSolution(count, iniTemp, cities);
         if(cities.size() <= 3) return current;
         Solution best = current;
@@ -71,12 +83,15 @@ public class SimAnnealing {
         }
     }
 
-    private int[] generateNonContiguous(int minInc, int maxInc){
+    public int[] generateNonContiguous(int minInc, int maxExc){
         int[] res = new int[2];
-        res[0] = (int)(Math.random() * (maxInc)) + minInc;
-        res[1] = (int)(Math.random() * (maxInc)) + minInc;
-        if(Math.abs(res[0] - res[1]) == 0)
-            return generateNonContiguous(minInc, maxInc);
+        res[0] = (int)(Math.random() * (maxExc-minInc)) + minInc;
+        res[1] = (int)(Math.random() * (maxExc-minInc)) + minInc;
+        while(Math.abs(res[0] - res[1]) <= 1)
+        {
+            res[0] = (int)(Math.random() * (maxExc-minInc)) + minInc;
+            res[1] = (int)(Math.random() * (maxExc-minInc)) + minInc;
+        }
         return res;
     }
 }

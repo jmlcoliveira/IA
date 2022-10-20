@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -30,7 +31,7 @@ public class Main {
         SimAnnealing sim = new SimAnnealing(d);
         int best = Integer.MAX_VALUE;
         while(true) {
-            Solution s = sim.solution(cities, 10000, 10);
+            Solution s = sim.solution(cities, 2000, cities.size());
             if(s.getSolutionDistance() < best){
                 System.out.println(s);
                 best = s.getSolutionDistance();
