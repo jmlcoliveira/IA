@@ -100,11 +100,6 @@ pref(ana,pedro,3).
 pref(ana,carlos,2).
 pref(ana,miguel,1).
 
-filho(miguel, joao).
-filho(joao, pedro).
-filho(marco, pedro).
-filho(carlos, marco).
-
 % --- geradores ---
 1{cor_casa(H, C): cor(C)}1 :- casa(H).
 1{vive_em(H, P): homem(P)}1 :- casa(H).
@@ -122,6 +117,14 @@ filho(carlos, marco).
 % -----------------
 
 % --- restricoes ---
+filho(miguel, joao). %1
+
+filho(joao, pedro). %2
+
+filho(marco, pedro). %3
+
+filho(carlos, marco). %4
+
 cor_casa(H1, vermelha) :- vive_em(H1, P), filho(carlos, P). %5
 
 dona(M1, cao) :- casado(miguel, M1). %6
@@ -151,11 +154,10 @@ bebe(C1, cha) :- vive_em(C1, P), filho(miguel, P). %13
 adepto(belenenses, F) :- filho(F, marco). %14
 
 %---15---
-:- adepto(porto, H1), vive_em(C1, H1), dona(M1, cavalo), casado(H2, M1), vive_em(C2, H2), C1==C2. %9
-:- adepto(porto, H1), vive_em(C1, H1), dona(M1, cavalo), casado(H2, M1), vive_em(C2, H2), C1>C2+1. %9
-:- adepto(porto, H1), vive_em(C1, H1), dona(M1, cavalo), casado(H2, M1), vive_em(C2, H2), C1<C2-1. %9
+:- adepto(porto, H1), vive_em(C1, H1), dona(M1, cavalo), casado(H2, M1), vive_em(C2, H2), C1==C2.
+:- adepto(porto, H1), vive_em(C1, H1), dona(M1, cavalo), casado(H2, M1), vive_em(C2, H2), C1>C2+1.
+:- adepto(porto, H1), vive_em(C1, H1), dona(M1, cavalo), casado(H2, M1), vive_em(C2, H2), C1<C2-1.
 %--------
-
 
 cor_casa(C1, verde) :- bebe(C1, cafe). %16
 
@@ -167,6 +169,7 @@ casado(pedro, ana). %19
 
 :- casado(carlos, maria). %20
 
-casado(H1, M1), casado(H2, M2), H1!=H2 :- pref(H1, M1, N1), pref(H1, M2, N2), N1 > N2, pref(M1, H1, N3), pref(M1, H2, N4) , N3 > N4.
+:- casado(H1, M1), casado(H2, M2), H1!=H2, pref(H1, M1, N1), pref(H1, M2, N2), N1 < N2, pref(M1, H1, N3), pref(M1, H2, N4) , N3 < N4.
+
 #show dona/2.
 #show vive_em/2.
