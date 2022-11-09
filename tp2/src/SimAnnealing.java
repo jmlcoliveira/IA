@@ -86,7 +86,7 @@ public class SimAnnealing {
         int[] res = new int[2];
         res[0] = (int)(Math.random() * (maxExc-minInc)) + minInc;
         res[1] = (int)(Math.random() * (maxExc-minInc)) + minInc;
-        while(Math.abs(res[0] - res[1]) <= 1)
+        if(Math.abs(res[0] - res[1]) <= 1)
         {
             res[0] = (int)(Math.random() * (maxExc-minInc)) + minInc;
             res[1] = (int)(Math.random() * (maxExc-minInc)) + minInc;
