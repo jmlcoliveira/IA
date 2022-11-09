@@ -1,0 +1,72 @@
+X é um conjunto de átomos
+P+ é um programa positivo
+
+X é fechado sobre P sse head(r) pertence a X sempre que body(r) pertence a X
+
+regra r:
+
+   a1 :- a2, a3, a4
+< head >  <   body   >
+
+--------Programas positivos-----------
+P1.1:
+chuva←
+molhado←chuva
+molhado←rega
+
+*chuva, molhado //modelo classico e estavel (menos atomos)
+chuva, rega, molhado //modelo classico
+
+
+P1.2:
+café←
+limão←chá
+açucar←café
+leite←café,açucar
+chá←limão
+chá←dieta
+
+*café, açucar, leite //modelo estavel
+café, açucar, leite, chá, limao //modelo classico
+café, açucar, leite, chá, limao, dieta //modelo classico
+
+---------Programas normais----------
+P1.3:
+rega :- not chuva //eliminar "not chuva" pq assumimos que é vdd
+chuva :- not rega // eliminar pq temos rega, logo nao rega é sempre falso
+molhado :- chuva
+molhado :- rega
+
+...
+
+rega :-
+molhado :- chuva
+molhado :- rega
+
+p(rega, molhado) //modelo estavel
+
+
+P1.4:
+dieta :- not açucar //eliminar pq temos acucar
+café :- not chá //apagar "not cha" pq é falso
+limão :- chá
+açucar :- café
+leite :- café,açucar
+chá :- limão
+chá :- dieta
+
+...
+
+café :-
+limão :- chá
+açucar :- café
+leite :- café,açucar
+chá :- limão
+chá :- dieta
+
+p(cafe, acucar, leite) //modelo estavel
+
+
+
+
+
