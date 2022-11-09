@@ -109,21 +109,64 @@ filho(carlos, marco).
 1{cor_casa(H, C): cor(C)}1 :- casa(H).
 1{vive_em(H, P): homem(P)}1 :- casa(H).
 1{adepto(C, P): homem(P)}1 :- clube(C).
-1{bebem(H, B): bebida(B)}1 :- casa(H).
+1{bebe(H, B): bebida(B)}1 :- casa(H).
 1{casado(H, M): mulher(M)}1 :- homem(H).
 1{dona(M, A): animal(A)}1 :- mulher(M).
 
 :- cor_casa(H1, C1), cor_casa(H2, C1), H1 != H2.
 :- vive_em(H1, P1), vive_em(H2, P1), H1 != H2.
 :- adepto(C1, P1), adepto(C2, P1), C1 != C2.
-:- bebem(C1, B1), bebem(C2, B1), C1 != C2.
+:- bebe(C1, B1), bebe(C2, B1), C1 != C2.
 :- casado(H1, M1), casado(H2, M1), H1 != H2.
-:- dona(M1, A1), casado(M2, A1), M1 != M2.
+:- dona(M1, A1), dona(M2, A1), M1 != M2.
 % -----------------
 
 % --- restricoes ---
-vive_em(H, P) :- filho(carlos, P), cor_casa(H, vermelha).
-casado(miguel, M) :- dona(M, cao).
-vive_em(1, P) :- filho(carlos, P1), filho(P1, P). 
+cor_casa(H1, vermelha) :- vive_em(H1, P), filho(carlos, P). %5
+
+dona(M1, cao) :- casado(miguel, M1). %6
+
+vive_em(1, A) :- filho(carlos, P), filho(P, A). %7
+
+cor_casa(C1, amarela) :- vive_em(C1, P1), adepto(porto, P1). %8
+
+%---9---
+:- adepto(academica, H1), vive_em(C1, H1), dona(M1, raposa), casado(H2, M1), vive_em(C2, H2), C1==C2. %9
+:- adepto(academica, H1), vive_em(C1, H1), dona(M1, raposa), casado(H2, M1), vive_em(C2, H2), C1>C2+1. %9
+:- adepto(academica, H1), vive_em(C1, H1), dona(M1, raposa), casado(H2, M1), vive_em(C2, H2), C1<C2-1. %9
+%-------
+
+%---10---
+:- vive_em(C1, pedro), cor_casa(C2, azul), C1==C2.
+:- vive_em(C1, pedro), cor_casa(C2, azul), C1>C2+1.
+:- vive_em(C1, pedro), cor_casa(C2, azul), C1<C2-1.
+%--------
+
+dona(M1, tartaruga) :- adepto(sporting, H1), casado(H1, M1). %11
+
+bebe(C1, sumo) :- vive_em(C1, A), adepto(A, benfica). %12
+
+bebe(C1, cha) :- vive_em(C1, P), filho(miguel, P). %13
+
+adepto(belenenses, F) :- filho(F, marco). %14
+
+%---15---
+:- adepto(porto, H1), vive_em(C1, H1), dona(M1, cavalo), casado(H2, M1), vive_em(C2, H2), C1==C2. %9
+:- adepto(porto, H1), vive_em(C1, H1), dona(M1, cavalo), casado(H2, M1), vive_em(C2, H2), C1>C2+1. %9
+:- adepto(porto, H1), vive_em(C1, H1), dona(M1, cavalo), casado(H2, M1), vive_em(C2, H2), C1<C2-1. %9
+%--------
 
 
+cor_casa(C1, verde) :- bebe(C1, cafe). %16
+
+cor_casa(C1, branca) :- cor_casa(C1+1, verde) . %17
+
+bebe(3, leite). %18
+
+casado(pedro, ana). %19
+
+:- casado(carlos, maria). %20
+
+casado(H1, M1), casado(H2, M2), H1!=H2 :- pref(H1, M1, N1), pref(H1, M2, N2), N1 > N2, pref(M1, H1, N3), pref(M1, H2, N4) , N3 > N4.
+#show dona/2.
+#show vive_em/2.
