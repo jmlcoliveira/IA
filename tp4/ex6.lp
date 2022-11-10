@@ -133,31 +133,22 @@ vive_em(1, A) :- filho(carlos, P), filho(P, A). %7
 
 cor_casa(C1, amarela) :- vive_em(C1, P1), adepto(porto, P1). %8
 
-%---9---
-:- adepto(academica, H1), vive_em(C1, H1), dona(M1, raposa), casado(H2, M1), vive_em(C2, H2), C1==C2. %9
-:- adepto(academica, H1), vive_em(C1, H1), dona(M1, raposa), casado(H2, M1), vive_em(C2, H2), C1>C2+1. %9
-:- adepto(academica, H1), vive_em(C1, H1), dona(M1, raposa), casado(H2, M1), vive_em(C2, H2), C1<C2-1. %9
-%-------
+ao_lado(H1, H2) :- casa(H1), casa(H2), H1=H2+1.
+ao_lado(H1, H2) :- casa(H1), casa(H2), H1=H2-1.
 
-%---10---
-:- vive_em(C1, pedro), cor_casa(C2, azul), C1==C2.
-:- vive_em(C1, pedro), cor_casa(C2, azul), C1>C2+1.
-:- vive_em(C1, pedro), cor_casa(C2, azul), C1<C2-1.
-%--------
+:- adepto(academica, H1), vive_em(C1, H1), dona(M1, raposa), casado(H2, M1), vive_em(C2, H2), not ao_lado(C1, C2). %9
+
+:- vive_em(C1, pedro), cor_casa(C2, azul), not ao_lado(C1, C2). %10
 
 dona(M1, tartaruga) :- adepto(sporting, H1), casado(H1, M1). %11
 
-bebe(C1, sumo) :- vive_em(C1, A), adepto(A, benfica). %12
+bebe(C1, sumo) :- vive_em(C1, A), adepto(benfica, A). %12
 
 bebe(C1, cha) :- vive_em(C1, P), filho(miguel, P). %13
 
 adepto(belenenses, F) :- filho(F, marco). %14
 
-%---15---
-:- adepto(porto, H1), vive_em(C1, H1), dona(M1, cavalo), casado(H2, M1), vive_em(C2, H2), C1==C2.
-:- adepto(porto, H1), vive_em(C1, H1), dona(M1, cavalo), casado(H2, M1), vive_em(C2, H2), C1>C2+1.
-:- adepto(porto, H1), vive_em(C1, H1), dona(M1, cavalo), casado(H2, M1), vive_em(C2, H2), C1<C2-1.
-%--------
+:- adepto(porto, H1), vive_em(C1, H1), dona(M1, cavalo), casado(H2, M1), vive_em(C2, H2), not ao_lado(C1, C2).
 
 cor_casa(C1, verde) :- bebe(C1, cafe). %16
 
@@ -169,7 +160,6 @@ casado(pedro, ana). %19
 
 :- casado(carlos, maria). %20
 
-:- casado(H1, M1), casado(H2, M2), H1!=H2, pref(H1, M1, N1), pref(H1, M2, N2), N1 < N2, pref(M1, H1, N3), pref(M1, H2, N4) , N3 < N4.
+:- casado(H1, M1), casado(H2, M2), H1!=H2, pref(H1, M1, N1), pref(H1, M2, N2), N1 < N2, pref(M2, H2, N3), pref(M2, H1, N4) , N3 < N4.
 
-#show dona/2.
-#show vive_em/2.
+#show casado/2.
